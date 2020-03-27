@@ -103,24 +103,23 @@ bindkey -v '^?' backward-delete-char
 export VIRTUAL_ENV_DISABLE_PROMPT=
 
 # Customize prompt
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ "
+NORMAL_MODE_PROMPT='[N]'
+INSERT_MODE_PROMPT='<I>'
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ $INSERT_MODE_PROMPT "
 
-# FIXME Indicator for NORMAL, INSERT or SELECT mode?
-# function zle-line-init zle-keymap-select {
-# 	local STATIC_PART="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ "
-#     	case ${KEYMAP} in
-#         	(vicmd)      PS1=$STATIC_PART$'[N] ' 
-# 			;;
-#         	(main|viins) PS1=$STATIC_PART$'<I> '
-# 		       	;;
-#         	(*)          PS1=$STATIC_PART$' '
-# 		       	;;
-#    	esac
-#     	zle reset-prompt
-# }
-# zle -N zle-line-init
-# zle -N zle-keymap-select
-
+function zle-line-init zle-keymap-select {
+  case ${KEYMAP} in
+    (vicmd)      PS1=${PS1/$INSERT_MODE_PROMPT/$NORMAL_MODE_PROMPT} 
+      ;;
+    (main|viins) PS1=${PS1/$NORMAL_MODE_PROMPT/$INSERT_MODE_PROMPT}
+      ;;
+    (*) 
+      ;;
+  esac
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
 
 # FIXME Use ranger to switch directories and bind it to ctrl-o
 # lfcd () {
@@ -153,46 +152,39 @@ for m in visual viopp; do
 done
 
 # Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
+autoload edit-command-line
+zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-### MY FUNCTIONS
-# Find a command from the terminal
-function dafuck {
-    eval $(compgen -c | tr " " "\n" | grep -Eo '[^/]+/?$' | fzf)
+### Plugins (loaded from source)
+# SyntaxHighlight FIXME use submodule
+[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] &&
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Autosuggestions FIXME use submodule
+[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] &&
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# fzf (Installed with VIM)
+[ -n "$(command -v fzf)" ] && { 
+  source "$XDG_CONFIG_HOME"/fzf/shell/completion.zsh; 
+  source "$XDG_CONFIG_HOME"/fzf/shell/key-bindings.zsh; 
 }
 
-### Plugins (loaded from source)
-# SyntaxHighligh (Installed with AUR)
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Autosuggestions (Installed with AUR)
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# fzf (Installed with PacMan)
-[ -x $(command -v fzf) ] && { source /usr/share/fzf/completion.zsh; source /usr/share/fzf/key-bindings.zsh; }
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Load nix-env
+# Load nix-env FIXME use XDG_DATA_HOME or Uninstall
 [ -f ~/.nix-profile/etc/profile.d/nix.sh ] && . ~/.nix-profile/etc/profile.d/nix.sh
 
 # EMCSCRIPT
-# Adding directories to PATH:
+# Adding directories to PATH: FIXME use XDG_CONFIG_HOME
 PATH="/home/dlevym/Proyects/WASM_WebAssemby/emsdk/upstream/emscripten:/home/dlevym/Proyects/WASM_WebAssemby/emsdk/node/12.9.1_64bit/bin:$PATH"
 
-# Setting environment variables:
+# Setting environment variables: FIXME use XDG_CONFIG_HOME
 EMSDK=/home/dlevym/Proyects/WASM_WebAssemby/emsdk
 EMSDK_NODE=/home/dlevym/Proyects/WASM_WebAssemby/emsdk/node/12.9.1_64bit/bin/node
 
-# nvim
-if [ `command -v nvim` ]; then 
-    alias vim="nvim"
-    alias gvim="nvim-qt"
-fi
-
 # NVM
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+
 # This loads nvm
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
