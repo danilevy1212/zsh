@@ -165,11 +165,8 @@ bindkey '^e' edit-command-line
 [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] &&
   source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# fzf (Installed with VIM)
-[ -n "$(command -v fzf)" ] && { 
-  source "$XDG_CONFIG_HOME"/fzf/shell/completion.zsh; 
-  source "$XDG_CONFIG_HOME"/fzf/shell/key-bindings.zsh; 
-}
+# FZF
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
 # Load nix-env FIXME use XDG_DATA_HOME or Uninstall
 [ -f ~/.nix-profile/etc/profile.d/nix.sh ] && . ~/.nix-profile/etc/profile.d/nix.sh
