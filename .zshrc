@@ -1,0 +1,206 @@
+### GENERAL
+# Enable colors
+autoload -U colors && colors
+
+# Full 256-color support
+export TERM="xterm-256color"
+
+# Do menu-driven completion.
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+
+# Completions are aware of when trying to gain privileges
+zstyle ':completion::complete:*' gain-privileges 1
+
+# Include hidden files.
+_comp_options+=(globdots)
+
+# Zsh to use the same colors as ls
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+
+# Access to zsh completion functions
+autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+
+# Access to bash completion functions
+autoload -Uz bashcompinit && bashcompinit
+
+# Setup history and history file
+export HISTFILE="$XDG_DATA_HOME/history"
+export HISTSIZE=100000
+export SAVEHIST=100000
+
+# Append history to history file
+setopt appendhistory 
+
+# Perform cd to a directory automatically
+setopt autocd
+
+# Backward incremental search
+bindkey '^R' history-incremental-search-backward
+
+# Beep on error
+setopt beep
+
+# Treat the ‘#’, ‘~’ and ‘^’ characters as part of patterns
+setopt extendedglob
+
+# Print error if there is no match for argument
+setopt nomatch
+
+# Report status of background jobs immediately
+setopt notify
+
+# Parameter expansion, command substitution and arithmetic expansion are performed in prompts.
+setopt PROMPT_SUBST  
+
+# autocompletion of command line switches for aliases
+setopt COMPLETE_ALIASES
+
+# git info
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+RPROMPT=\$vcs_info_msg_0_
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-revision true
+zstyle ':vcs_info:git:*' formats '%b%c%u'
+
+# colored man pages
+function colored() {
+	env \
+		LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+		LESS_TERMCAP_md=$(printf "\e[1;31m") \
+		LESS_TERMCAP_me=$(printf "\e[0m") \
+		LESS_TERMCAP_se=$(printf "\e[0m") \
+		LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+		LESS_TERMCAP_ue=$(printf "\e[0m") \
+		LESS_TERMCAP_us=$(printf "\e[1;32m") \
+		PAGER="${commands[less]:-$PAGER}" \
+		_NROFF_U=1 \
+		PATH="$HOME/bin:$PATH" \
+			"$@"
+}
+
+function man() {
+	colored man "$@"
+}
+
+### vi-mode
+# Activate
+bindkey -v
+export KEYTIMEOUT=1
+
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^h' backward-delete-char
+bindkey -v '^?' backward-delete-char
+
+# Let python change prompt for venvs
+export VIRTUAL_ENV_DISABLE_PROMPT=
+
+# Customize prompt
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ "
+
+# FIXME Indicator for NORMAL, INSERT or SELECT mode?
+# function zle-line-init zle-keymap-select {
+# 	local STATIC_PART="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ "
+#     	case ${KEYMAP} in
+#         	(vicmd)      PS1=$STATIC_PART$'[N] ' 
+# 			;;
+#         	(main|viins) PS1=$STATIC_PART$'<I> '
+# 		       	;;
+#         	(*)          PS1=$STATIC_PART$' '
+# 		       	;;
+#    	esac
+#     	zle reset-prompt
+# }
+# zle -N zle-line-init
+# zle -N zle-keymap-select
+
+
+# FIXME Use ranger to switch directories and bind it to ctrl-o
+# lfcd () {
+#     tmp="$(mktemp)"
+#     lf -last-dir-path="$tmp" "$@"
+#     if [ -f "$tmp" ]; then
+#         dir="$(cat "$tmp")"
+#         rm -f "$tmp"
+#         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+#     fi
+# }
+# bindkey -s '^o' 'lfcd\n'
+
+# ci"
+autoload -U select-quoted
+zle -N select-quoted
+for m in visual viopp; do
+  for c in {a,i}{\',\",\`}; do
+    bindkey -M $m $c select-quoted
+  done
+done
+
+# ci{, ci(, di{ etc..
+autoload -U select-bracketed
+zle -N select-bracketed
+for m in visual viopp; do
+  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+    bindkey -M $m $c select-bracketed
+  done
+done
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+### MY FUNCTIONS
+# Find a command from the terminal
+function dafuck {
+    eval $(compgen -c | tr " " "\n" | grep -Eo '[^/]+/?$' | fzf)
+}
+
+### Plugins (loaded from source)
+# SyntaxHighligh (Installed with AUR)
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Autosuggestions (Installed with AUR)
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# fzf (Installed with PacMan)
+[ -x $(command -v fzf) ] && { source /usr/share/fzf/completion.zsh; source /usr/share/fzf/key-bindings.zsh; }
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Load nix-env
+[ -f ~/.nix-profile/etc/profile.d/nix.sh ] && . ~/.nix-profile/etc/profile.d/nix.sh
+
+# EMCSCRIPT
+# Adding directories to PATH:
+PATH="/home/dlevym/Proyects/WASM_WebAssemby/emsdk/upstream/emscripten:/home/dlevym/Proyects/WASM_WebAssemby/emsdk/node/12.9.1_64bit/bin:$PATH"
+
+# Setting environment variables:
+EMSDK=/home/dlevym/Proyects/WASM_WebAssemby/emsdk
+EMSDK_NODE=/home/dlevym/Proyects/WASM_WebAssemby/emsdk/node/12.9.1_64bit/bin/node
+
+# nvim
+if [ `command -v nvim` ]; then 
+    alias vim="nvim"
+    alias gvim="nvim-qt"
+fi
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+# This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# This loads nvm bash_completion
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Load aliases
+source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
+
+# Load plugins 
+source "$XDG_CONFIG_HOME/zsh/plugins/index.zsh"
