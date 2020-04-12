@@ -1,13 +1,3 @@
-# make vim default editor
-if [ -n "$(command -v nvim)" ]; then
-  export EDITOR='nvim'
-else 
-  export EDITOR='vim'
-fi
-
-# default browser
-export BROWSER='firefox'
-
 # Locale in english
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
@@ -33,8 +23,3 @@ export XDG_CACHE_HOME="$HOME/.cache"
 if [[ "$(tty)" = "/dev/tty1" ]] && [ -n "$(command -v xmonad)" ]; then
   pgrep xmonad || startx
 fi
-
-# # added by Nix installer
-# if [ -e /home/dlevym/.nix-profile/etc/profile.d/nix.sh ]; then 
-#   . /home/dlevym/.nix-profile/etc/profile.d/nix.sh; 
-# fi

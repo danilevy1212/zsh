@@ -2,9 +2,6 @@
 # Enable colors
 autoload -U colors && colors
 
-# Full 256-color support
-export TERM="xterm-256color"
-
 # Do menu-driven completion.
 zstyle ':completion:*' menu select
 zmodload zsh/complist
@@ -121,17 +118,24 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-# FIXME Use ranger to switch directories and bind it to ctrl-o
-# lfcd () {
-#     tmp="$(mktemp)"
-#     lf -last-dir-path="$tmp" "$@"
-#     if [ -f "$tmp" ]; then
-#         dir="$(cat "$tmp")"
-#         rm -f "$tmp"
-#         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-#     fi
-# }
-# bindkey -s '^o' 'lfcd\n'
+## Termite dynamic directories
+if [[ "$TERM" == xterm-termite ]]; then
+  . /etc/profile.d/vte.sh
+  __vte_osc7
+fi
+
+# Use ranger to switch directories and bind it to ctrl-o
+ranger-cd () {
+    tempfile='/tmp/choosedir'
+    ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+    test -f "$tempfile" &&
+    if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+        cd -- "$(cat "$tempfile")"
+    fi
+    rm -f -- "$tempfile"
+}
+
+bindkey -vs "\ez" 'ranger-cd^M'
 
 # ci"
 autoload -U select-quoted
@@ -179,11 +183,8 @@ PATH="/home/dlevym/Proyects/WASM_WebAssemby/emsdk/upstream/emscripten:/home/dlev
 EMSDK=/home/dlevym/Proyects/WASM_WebAssemby/emsdk
 EMSDK_NODE=/home/dlevym/Proyects/WASM_WebAssemby/emsdk/node/12.9.1_64bit/bin/node
 
-# NVM
-export NVM_DIR="$XDG_CONFIG_HOME/nvm"
-
 # This loads nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
 
 # This loads nvm bash_completion
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
