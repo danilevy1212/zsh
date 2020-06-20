@@ -9,6 +9,14 @@
 
    #+BEGIN_SRC sh
 
-git clone git@github.com:danilevy1212/zsh.git $ZDOTDIR
+git clone https://github.com/danilevy1212/zsh.git $ZDOTDIR
+
+   #+END_SRC
+
+   This configuration has some third party dependencies as git submodules, to install them run
+
+   #+BEGIN_SRC sh
+
+git submodule update --init --recursive
 
    #+END_SRC
