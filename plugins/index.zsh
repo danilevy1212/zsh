@@ -8,3 +8,7 @@ source "$ZPLUGINS_FOLDER/zsh-z/zsh-z.plugin.zsh"
 
 ## Vterm integration
 source "$ZPLUGINS_FOLDER/vterm-integration/vterm.zsh"
+
+## Tmux XDG Integrations
+alias tmux=tmux -f "$XDG_CONFIG_HOME"/tmux/tmux.conf
+export TMUX_TMPDIR="$XDG_RUNTIME_DIR"

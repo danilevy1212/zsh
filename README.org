@@ -1,0 +1,14 @@
+* ZSH Config
+
+** INSTALLATION
+
+   This configuration requires to change the value of the ~ZDOTDIR~, which in most linux distros is first defined in ~/etc/zsh/zshenv~,
+   to a directory of your choosing. The .zshrc that resides in said directory will be read each time a new zsh session is started.
+
+   After changing ~ZDOTDIR~, just run this command:
+
+   #+BEGIN_SRC sh
+
+git clone git@github.com:danilevy1212/zsh.git $ZDOTDIR
+
+   #+END_SRC
