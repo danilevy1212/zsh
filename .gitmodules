@@ -1,3 +1,0 @@
-[submodule "plugins/zsh-z"]
-	path = plugins/zsh-z
-	url = https://github.com/agkozak/zsh-z.git

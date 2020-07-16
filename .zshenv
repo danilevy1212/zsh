@@ -21,8 +21,6 @@ export TERM=xterm-256color
 # default file-browser
 export FILEMANAGER="spacefm"
 
-# NVM
-export NVM_DIR="$XDG_CONFIG_HOME/nvm"
 
 # NPM and NODE XDG compliance
 export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
