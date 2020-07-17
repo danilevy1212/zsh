@@ -1,3 +1,10 @@
+## XDG (PREFIX only used for termux compatibily)
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_DIRS="$PREFIX/usr/local/share/:$PREFIX/usr/share/"
+export XDG_CONFIG_DIRS="$PREFIX/etc/xdg"
+export XDG_CACHE_HOME="$HOME/.cache"
+
 ### GENERAL
 # Enable colors
 autoload -U colors && colors
@@ -11,9 +18,6 @@ zstyle ':completion::complete:*' gain-privileges 1
 
 # Include hidden files.
 _comp_options+=(globdots)
-
-# Zsh to use the same colors as ls
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 
 # Access to zsh completion functions
 autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
@@ -162,9 +166,6 @@ bindkey '^e' edit-command-line
 
 ### Plugins (manual)
 
-## FZF FIXME Load it with zinit?
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
-
 ## VTERM
 # The main goal of these additional functions is to enable the shell to send information to vterm via properly escaped sequences.
 function vterm_printf(){
@@ -235,6 +236,17 @@ export NVM_LAZY_LOAD=true
 
 zinit ice wait'!0' lucid
 zinit light lukechilds/zsh-nvm
+
+# FZF
+zinit ice atclone"./install --all --xdg --no-bash --no-fish" as"program"
+zinit light junegunn/fzf
+
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
+    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+
+# Provides the LS_COLORS definitions for GNU ls
+zinit pack lucid wait'!0' lucid \
+      for ls_colors
 
 ## ALIASES
 source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
