@@ -209,7 +209,7 @@ autoload -Uz _zinit
 
 # Load a few important annexes.
 # (this is currently required for annexes)
-zinit wait'!0' light-mode lucid for \
+zinit wait light-mode lucid for \
     zinit-zsh/z-a-rust \
     zinit-zsh/z-a-as-monitor \
     zinit-zsh/z-a-patch-dl \
@@ -218,7 +218,7 @@ zinit wait'!0' light-mode lucid for \
 # Remember my directories dammit!
 export _Z_DATA="$XDG_CACHE_HOME/z"
 
-zinit ice wait'!0' lucid
+zinit ice wait lucid
 zinit light agkozak/zsh-z
 
 # Show me those delicious suggestions!
@@ -226,7 +226,7 @@ zinit ice wait lucid atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 
 # Syntax highlighting
-zinit ice wait'!0' lucid
+zinit ice wait lucid
 zinit light zdharma/fast-syntax-highlighting
 
 # NVM
@@ -234,15 +234,20 @@ export NVM_DIR="$XDG_CONFIG_HOME/nvm"
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 
-zinit ice wait'!0' lucid
+zinit ice wait lucid
 zinit light lukechilds/zsh-nvm
 
 # FZF
-zinit ice atclone"./install --all --xdg --no-bash --no-fish" as"program"
+zinit ice as"program" atclone"./install --all --xdg --no-bash --no-fish" \
+  atpull"%atclone"
 zinit light junegunn/fzf
 
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+
+[ "$(command -v rg)" ] && \
+    export FZF_DEFAULT_COMMAND="rg --files --hidden --no-ignore \
+                                   --smart-case --glob '!.git/*'"
 
 # Provides the LS_COLORS definitions for GNU ls
 zinit pack lucid wait'!0' lucid \
@@ -250,3 +255,6 @@ zinit pack lucid wait'!0' lucid \
 
 ## ALIASES
 source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
+
+## Finally, show off! (If I can)
+[ -n "$(command -v neofetch)" ] && { print "\n"; neofetch; }
