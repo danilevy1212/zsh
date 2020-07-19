@@ -246,11 +246,20 @@ zinit light junegunn/fzf
     source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
 [ "$(command -v rg)" ] && \
-    export FZF_DEFAULT_COMMAND="rg --files --hidden --no-ignore \
-                                   --smart-case --glob '!.git/*'"
+    export FZF_DEFAULT_COMMAND="rg --files --hidden --smart-case --glob '!.git/*'"
+
+# Tab completion with fzf
+zinit ice wait lucid
+zinit light Aloxaf/fzf-tab
+
+# give a preview of commandline arguments when completing `kill`
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
+zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
+       --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' \
+       --preview-window=down:3:wrap
 
 # Provides the LS_COLORS definitions for GNU ls
-zinit pack lucid wait'!0' lucid \
+zinit pack lucid wait lucid \
       for ls_colors
 
 ## ALIASES

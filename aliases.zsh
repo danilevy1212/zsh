@@ -15,7 +15,7 @@ if [ "$(command -v nvim)" ]; then
 fi
 
 # colorized ls
-alias ls='ls --color=auto'
+alias ls='ls --color=auto -a'
 
 [ -f "$XDG_CONFIG_HOME/zsh/secret_aliases.zsh" ] &&
   source "$XDG_CONFIG_HOME/zsh/secret_aliases.zsh"
