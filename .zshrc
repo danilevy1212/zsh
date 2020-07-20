@@ -238,12 +238,15 @@ zinit ice wait lucid
 zinit light lukechilds/zsh-nvm
 
 # FZF
-zinit ice as"program" atclone"./install --all --xdg --no-bash --no-fish" \
-  atpull"%atclone"
+zinit ice as"program" \
+      pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+      src="shell/key-bindings.zsh" \
+      atclone="mv install install.sh; \
+              ./install.sh --all --xdg --no-bash --no-fish --no-zsh; \
+              cp shell/completion.zsh _fzf_completion; \
+              cp bin/(fzf|fzf-tmux) $ZPFX/bin;"\
+      atpull"%atclone"
 zinit light junegunn/fzf
-
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && \
-    source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
 [ "$(command -v rg)" ] && \
     export FZF_DEFAULT_COMMAND="rg --files --hidden --smart-case --glob '!.git/*'"
@@ -259,8 +262,7 @@ zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
        --preview-window=down:3:wrap
 
 # Provides the LS_COLORS definitions for GNU ls
-zinit pack lucid wait lucid \
-      for ls_colors
+zinit pack lucid wait for ls_colors
 
 ## ALIASES
 source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
