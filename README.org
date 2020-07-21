@@ -2,21 +2,20 @@
 
 ** INSTALLATION
 
-   This configuration requires to change the value of the ~ZDOTDIR~, which in most linux distros is first defined in ~/etc/zsh/zshenv~,
-   to a directory of your choosing. The .zshrc that resides in said directory will be read each time a new zsh session is started.
+This configuration requires to change the value of the ~ZDOTDIR~, which in most linux distros is first defined in ~/etc/zsh/zshenv~,
+to a directory of your choosing. The .zshrc that resides in said directory will be read each time a new zsh session is started.
 
-   After changing ~ZDOTDIR~, just run this command:
+#+BEGIN_SRC sh
 
-   #+BEGIN_SRC sh
+  # /etc/zsh/zshenv
+  export ZDOTDIR="$HOME/.config/zsh"
 
-git clone https://github.com/danilevy1212/zsh.git $ZDOTDIR
+#+END_SRC
 
-   #+END_SRC
+After changing ~ZDOTDIR~, just download the repo:
 
-   This configuration has some third party dependencies as git submodules, to install them run
+#+BEGIN_SRC sh
 
-   #+BEGIN_SRC sh
+  git clone https://github.com/danilevy1212/zsh.git $ZDOTDIR
 
-git submodule update --init --recursive
-
-   #+END_SRC
+#+END_SRC
