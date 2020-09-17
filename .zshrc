@@ -264,6 +264,9 @@ zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
 # Provides the LS_COLORS definitions for GNU ls
 zinit pack lucid wait for ls_colors
 
+# TODO Consider installing Rust with zinit or adding the completions if not installed.
+
+
 ## ALIASES
 source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 
