@@ -45,3 +45,13 @@ export QT_IM_MODULE=ibus
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export PATH="$XDG_DATA_HOME/cargo/bin:$PATH"
+
+# Doom emacs
+export PATH="$XDG_CONFIG_HOME/emacs/bin:$PATH"
+export DOOMDIR="$XDG_CONFIG_HOME/doom"
+
+# Tramp
+[ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
+
+# Haskell
+export STACK_ROOT="$XDG_DATA_HOME"/stack

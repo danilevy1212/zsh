@@ -19,3 +19,6 @@ alias ls='ls --color=auto -a'
 
 [ -f "$XDG_CONFIG_HOME/zsh/secret_aliases.zsh" ] &&
   source "$XDG_CONFIG_HOME/zsh/secret_aliases.zsh"
+
+# Yarn
+alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"

@@ -87,40 +87,41 @@ function man() {
 	colored man "$@"
 }
 
-### vi-mode
+### vi-mode TODO I don't think this is that useful anyway
 # Activate
-bindkey -v
-export KEYTIMEOUT=1
+# bindkey -v
+# export KEYTIMEOUT=1
+# NORMAL_MODE_PROMPT='[N]'
+# INSERT_MODE_PROMPT='<I>'
 
 # Use vim keys in tab complete menu:
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^h' backward-delete-char
-bindkey -v '^?' backward-delete-char
+# bindkey -M menuselect 'h' vi-backward-char
+# bindkey -M menuselect 'k' vi-up-line-or-history
+# bindkey -M menuselect 'l' vi-forward-char
+# bindkey -M menuselect 'j' vi-down-line-or-history
+# bindkey -v '^h' backward-delete-char
+# bindkey -v '^?' backward-delete-char
+#
+# function zle-line-init zle-keymap-select {
+#   case ${KEYMAP} in
+#     (vicmd)      PS1=${PS1/$INSERT_MODE_PROMPT/$NORMAL_MODE_PROMPT}
+#       ;;
+#     (main|viins) PS1=${PS1/$NORMAL_MODE_PROMPT/$INSERT_MODE_PROMPT}
+#       ;;
+#     (*)
+#       ;;
+#   esac
+#   zle reset-prompt
+# }
+# zle -N zle-line-init
+# zle -N zle-keymap-select
+# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ $INSERT_MODE_PROMPT "
 
 # Let python change prompt for venvs
 export VIRTUAL_ENV_DISABLE_PROMPT=
 
 # Customize prompt
-NORMAL_MODE_PROMPT='[N]'
-INSERT_MODE_PROMPT='<I>'
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ $INSERT_MODE_PROMPT "
-
-function zle-line-init zle-keymap-select {
-  case ${KEYMAP} in
-    (vicmd)      PS1=${PS1/$INSERT_MODE_PROMPT/$NORMAL_MODE_PROMPT}
-      ;;
-    (main|viins) PS1=${PS1/$NORMAL_MODE_PROMPT/$INSERT_MODE_PROMPT}
-      ;;
-    (*)
-      ;;
-  esac
-  zle reset-prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M%{$fg[red]%}]%{$reset_color%} %~ "
 
 ## Termite dynamic directories
 if [[ "$TERM" == xterm-termite ]]; then
@@ -272,3 +273,11 @@ source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 
 ## Finally, show off! (If I can)
 [ -n "$(command -v neofetch)" ] && { print "\n"; neofetch; }
+
+## TEST
+`if [[ "$TERM" == "dumb" ]]; then
+    unset zle_bracketed_paste
+    unset zle
+    PS1='$ '
+    return
+fi`
