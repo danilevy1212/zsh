@@ -25,7 +25,8 @@ export FILEMANAGER="spacefm"
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 
-export LD_LIBRARY_PATH=/usr/local/lib
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/include
+export PKG_CONFIG_PATH=/usr/share/pkgconfig:/usr/lib/pkgconfig
 
 # Locale in english
 export LANG=en_US.UTF-8
