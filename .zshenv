@@ -53,9 +53,3 @@ export DOOMDIR="$XDG_CONFIG_HOME/doom"
 
 # Tramp
 [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
-
-# Haskell
-export STACK_ROOT="$XDG_DATA_HOME"/stack
-
-# Nix
-export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
